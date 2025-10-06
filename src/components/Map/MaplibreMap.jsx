@@ -4,6 +4,7 @@ import Map, { Marker, useMap } from 'react-map-gl';
 import maplibregl from 'maplibre-gl';
 import useEventListener from '@use-it/event-listener';
 import { useSnackbar } from 'notistack';
+import { useEffect } from "react";
 import { MapContextProvider } from './context';
 import { totalBounds } from '../../data/bounds';
 import maplibreglWorker from "maplibre-gl/dist/maplibre-gl-csp-worker";
@@ -19,6 +20,19 @@ const convertBounds = ([w, s, e, n]) => ([
   [w, s], [e, n]
 ]);
 
+function FlyToCinema({ selectedCinema }) {
+  const map = useMap().current;
+  useEffect(() => {
+    if (selectedCinema && map) {
+      map.flyTo({
+        center: [selectedCinema.lng, selectedCinema.lat],
+        zoom: 14,
+      });
+    }
+  }, [selectedCinema, map]);
+  return null;
+}
+
 const MapSnappingEventListener = () => {
   const { enqueueSnackbar } = useSnackbar();
   const map = useMap().current;
@@ -30,7 +44,7 @@ const MapSnappingEventListener = () => {
     try {
       // [Docs](https://maplibre.org/maplibre-gl-js-docs/api/map/#map#flyto)
       map.flyTo({
-        center: [lat, lng],
+        center: [lng,lat],
         zoom: 14,
       })
     } catch (e) {
@@ -41,7 +55,7 @@ const MapSnappingEventListener = () => {
   return null;
 };
 
-const MaplibreMap = ({ children }) => {
+const MaplibreMap = ({ children,selectedCinema }) => {
   console.log("render Maplibre map");
   return (
     <Map
