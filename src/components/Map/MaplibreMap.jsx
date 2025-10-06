@@ -65,7 +65,8 @@ const MaplibreMap = ({ children,selectedCinema }) => {
         bounds: convertBounds(totalBounds),
       }}
       padding={24}
-    >
+    >  
+      <FlyToCinema selectedCinema={selectedCinema}/>
       <MapSnappingEventListener />
       <MapContextProvider value={{ Marker: MaplibreMarker }}>
         {children}
